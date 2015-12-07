@@ -34,7 +34,9 @@ def main():
     scheduler.enterabs(inittime, 1, catchdata, (module, inittime, ttl,))
     scheduler.run()
 
-
+#TODO: Flush data in fixed console
+#TODO: Display in sequence
+#TODO: Add unit name
 def catchdata(mod, action_time, ttl):
     datas = GetData(mod).catch()
     for data in datas:
