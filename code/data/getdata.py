@@ -7,6 +7,15 @@ from collections import OrderedDict
 author: hty / zby
 create: 2015.12.07
 getdata.py -- catch avg_load cpu and memory usage from scripts
+
+usage:
+    new instance with GetData('MODULE') MODULE means cpu/memory/load
+    get data with catch() function, data type depend on MODULE, and return jsonType
+
+MODULE:
+    load: w1_avg/ w5_avg/ w15_avg
+    cpu: user/ nice/ system/ idle/ iowait/ irq/ softirq/ steal/ guest/ guest_nice
+    memory: total/ used/ abs_used/ free/ buffers/ cached/ active/ inactive/ swap_used
 """
 
 
