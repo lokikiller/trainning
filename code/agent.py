@@ -1,6 +1,7 @@
-import sched
-import sys, time
 import argparse
+import sched
+import time
+import curses
 from data.getdata import GetData
 
 """
@@ -8,8 +9,6 @@ author: hty / zby
 create: 2015.11.30
 agent.py -- catch avg_load cpu and memory usage
 """
-
-scheduler = sched.scheduler(time.time, time.sleep)
 
 
 def main():
@@ -26,23 +25,38 @@ def main():
     groupmodules.add_argument('load, cpu, memory', action='store_const', const=0)
 
     args = parser.parse_args()
+    try:
+        screen = curses.initscr()
+        screen.clear()
 
-    ttl = args.ttl
-    inittime = time.time()
-    module = args.MODULE
+        ttl = args.ttl
+        inittime = time.time()
+        module = args.MODULE
 
-    scheduler.enterabs(inittime, 1, catchdata, (module, inittime, ttl,))
-    scheduler.run()
+        scheduler.enterabs(inittime, 1, catchdata, (module, inittime, ttl, screen,))
+        scheduler.run()
+    except Exception:
+        curses.endwin()
+        parser.parse_args(['-h'])
 
-#TODO: Flush data in fixed console
-#TODO: Display in sequence
-#TODO: Add unit name
-def catchdata(mod, action_time, ttl):
+
+# TODO: Add unit name
+def catchdata(mod, action_time, ttl, screen):
     datas = GetData(mod).catch()
+    i = 0
     for data in datas:
-        print '%-15s\t%-15s' % (data, datas[data])
-    scheduler.enterabs(action_time + ttl, 1, catchdata, (mod, action_time + ttl, ttl,))
+        i += 1
+        str = '{:<15}\t{:<15}'.format(data, datas[data])
+        screen.addstr(i, 0, str, curses.A_NORMAL)
+        screen.refresh()
+
+    scheduler.enterabs(action_time + ttl, 1, catchdata, (mod, action_time + ttl, ttl, screen,))
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        scheduler = sched.scheduler(time.time, time.sleep)
+        main()
+    except KeyboardInterrupt:
+        curses.endwin()
+        exit()

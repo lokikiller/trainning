@@ -1,6 +1,7 @@
 import json
 import subprocess
 from exception.module import ModuleException
+from collections import OrderedDict
 
 """
 author: hty / zby
@@ -10,8 +11,6 @@ getdata.py -- catch avg_load cpu and memory usage from scripts
 
 
 class GetData(object):
-
-
     def __init__(self, mod):
         self.__scriptPath = '../scripts/'
         self.mod = mod
@@ -39,4 +38,4 @@ class GetData(object):
             data = self.__get_load()
         else:
             raise ModuleException('no such module ' + self.mod)
-        return json.loads(data)
+        return json.loads(data, object_pairs_hook=OrderedDict)
