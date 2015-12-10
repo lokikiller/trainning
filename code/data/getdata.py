@@ -21,7 +21,7 @@ MODULE:
 
 class GetData(object):
     def __init__(self, mod):
-        self.__scriptPath = '../scripts/'
+        self.__scriptPath = './bash/'
         self.mod = mod
 
     def __get_cpu(self):

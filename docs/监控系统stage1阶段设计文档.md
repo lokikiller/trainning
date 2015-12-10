@@ -13,9 +13,9 @@
 	* CentOS 5,6,7
 	* openSUSE
 * 采集数据：
-	* 负载
-	* cpu利用率
-	* 内存利用率
+	* 平均负载
+	* cpu使用率
+	* 内存使用量
 
 -----------------------------------------
 
@@ -69,12 +69,12 @@ swap_used 已使用swap
 
 ####功能设计
 * 客户端设计  
-客户端cli采用python进行封装主要有以下几个基本操作：执行文件在code目录下
-	* 查看帮助`python agent.py -h` 或者 `python agent.py --help`
-	* 查看版本号`python agent.py -v` 或者 `python agent.py --version`
-	* 设置ttl`python agent.py -t 50`其中单位为秒，默认为60s，该参数可以不进行设置
-	* 查看资源利用情况`python agent.py -m MODULE`其中MODULE为cpu、memory或者为load，其他参数将返回帮助信息，该参数为必填参数
-* 服务端设计  
+客户端cli采用python封装，执行文件是根目录下 code/agent.py，基本操作如下：
+	* 查看帮助
+	* 查看版本号
+	* 配置采集周期
+	* 查看资源利用情况
+* 后台设计  
 服务器端采用shell进行数据采集
 	* 负载信息获取方式：读取`/proc/loadavg`文件，输出为json格式文件
 	* 内存信息获取方式：读取`/proc/meminfo`文件，输出为json格式文件

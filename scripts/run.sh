@@ -1,3 +1,3 @@
 #/bin/sh
 
-cd /code && python main.py
+cd ../code && python ../code/agent.py -t 5 -m cpu
