@@ -242,10 +242,10 @@ routerApp.directive('cpuAvgLoadChart', ['server', function (server) {
 var simpleTableModules = [
     {
         name: 'memoryInfo',
-        template: '<key-value-list heading="Memory Info" module-name="mem" info="/proc/meminfo read-out."></key-value-list>'
+        template: '<key-value-list heading="内存信息 单位Byte" module-name="mem" info="/proc/meminfo 文件读出"></key-value-list>'
     }, {
         name: 'cpuInfo',
-        template: '<key-value-list heading="CPU Info" module-name="cpu" info="/proc/stats read-out."></key-value-list>'
+        template: '<key-value-list heading="CPU信息 单位%" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
     }
 ];
 
