@@ -18,7 +18,7 @@ do
 done
 
 #TODO:
-sleep 5
+sleep 1
 
 cpu2=(`$sedCmd -n 's/^cpu\s//p' /proc/stat`)
 total2=0
