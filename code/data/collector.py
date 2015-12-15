@@ -1,22 +1,31 @@
+#!/usr/bin/env python
+# -*- encoding=utf8 -*-
+
+'''
+FileName:   collector
+Author:     Hao Tingyi / Zhou Boyu
+@contact:   lokikiller@126.com
+@version:   $
+
+Description:
+    collect cpu/memory/load data from /proc file
+Changelog:
+    create at 2015.12.15
+'''
+
 import subprocess
 import time
 import collections
 from exception.module import ModuleException
 
-"""
-author: hty / zby
-create: 2015.12.14
-datacollection.py --- collect cpu memory load data from /proc/stat /proc/meminfo /proc/loadavg
-"""
-
 
 class DataCollection(object):
     def __init__(self, mod):
         self.mod = mod
-        method_name = '__get_%s' % (self.mod,)
+        method_name = 'get_%s' % (self.mod,)
         self.get_data = getattr(self, method_name, self.__raise_no_module)
 
-    def __get_cpu(self):
+    def get_cpu(self):
         cmd = "sed -n 's/^cpu\s//p' /proc/stat"
         process1 = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         cpu_array1 = process1.communicate()[0].strip().split(' ')
@@ -34,15 +43,20 @@ class DataCollection(object):
 
         diff = total2 - total1
         result = collections.OrderedDict()
-        key_list = ('user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq', 'steal', 'guest', 'guest_nice')
+        key_list = (
+            'user', 'nice', 'system', 'idle', 'iowait', 'irq', 'softirq',
+            'steal',
+            'guest', 'guest_nice')
 
         for i in range(10):
-            result[key_list[i]] = (float(cpu_array2[i]) - float(cpu_array1[i])) / diff
+            result[key_list[i]] = (float(cpu_array2[i]) - float(
+                cpu_array1[i])) / diff
 
         return result
 
-    def __get_memory(self):
-        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers:\|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
+    def get_memory(self):
+        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers: \
+        \|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         list = []
         for val in process.communicate()[0].strip().split('\n'):
@@ -61,7 +75,7 @@ class DataCollection(object):
 
         return result
 
-    def __get_load(self):
+    def get_load(self):
         cmd = "cat /proc/loadavg"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         data = process.communicate()[0].strip().split(' ')
@@ -74,11 +88,7 @@ class DataCollection(object):
         return result
 
     def __raise_no_module(self):
-        raise ModuleException('no such module' + self.mod)
+        raise ModuleException('no such module ' + self.mod)
 
     def catch(self):
-        data = self.get_data()
-        return data
-
-
-d = DataCollection()
+        return self.get_data()

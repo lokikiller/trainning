@@ -1,11 +1,17 @@
-"""
+#!/usr/bin/env python
+# -*- encoding=utf8 -*-
 
-author: hty / zby
-create: 2015.12.07
-module.py -- module exception (No such ModuleException)
+'''
+FileName:   module
+Author:     Hao Tingyi / Zhou Boyu
+@contact:   lokikiller@126.com
+@version:   $
 
-"""
+Description:
 
+Changelog:
+
+'''
 
 class ModuleException(Exception):
     def __init__(self, value):
