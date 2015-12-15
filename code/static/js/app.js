@@ -7,9 +7,9 @@ var routerApp = angular.module('routerApp', ['ngRoute']);
 routerApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.when('/loading', {
-            templateUrl: 'app/loading.html',
+            templateUrl: '/static/app/loading.html',
         }).when('/system-status', {
-            templateUrl: 'app/system-status.html'
+            templateUrl: '/static/app/system-status.html'
         }).otherwise({
             redirectTo: '/loading'
         });
@@ -35,7 +35,7 @@ routerApp.directive('topBar', function () {
             lastUpdated: '=',
             info: '=',
         },
-        templateUrl: 'app/top-bar.html',
+        templateUrl: '/static/app/top-bar.html',
         link: function (scope, element, attrs) {
             var $refreshBtn = element.find('refresh-btn').eq(0);
 
@@ -69,7 +69,7 @@ routerApp.directive('lastUpdate', function () {
         scope: {
             timestamp: '='
         },
-        templateUrl: 'app/last-update.html'
+        templateUrl: '/static/app/last-update.html'
     };
 });
 
@@ -81,7 +81,7 @@ routerApp.directive('keyValueList', ['server', '$rootScope', function (server, $
             info: '@',
             moduleName: '@',
         },
-        templateUrl: 'app/key-value-list.html',
+        templateUrl: '/static/app/key-value-list.html',
         link: function (scope, element) {
             scope.getData = function () {
                 delete scope.tableRows;
@@ -109,7 +109,7 @@ routerApp.directive('plugin', function () {
     return {
         restrict: 'E',
         transclude: true,
-        templateUrl: 'app/base-plugin.html'
+        templateUrl: '/static/app/base-plugin.html'
     };
 });
 
@@ -123,7 +123,7 @@ routerApp.directive('multiLineChart', ['$interval', '$compile', 'server', functi
             getDisplayValue: '=',
             delay: '='
         },
-        templateUrl: 'app/multi-line-chart.html',
+        templateUrl: '/static/app/multi-line-chart.html',
         link: function (scope, element) {
             var chart = new SmoothieChart({
                 borderVisible: false,
@@ -235,14 +235,14 @@ routerApp.directive('cpuAvgLoadChart', ['server', function (server) {
     return {
         restrict: 'E',
         scope: {},
-        templateUrl: 'app/cpu-load.html'
+        templateUrl: '/static/app/cpu-load.html'
     };
 }]);
 
 var simpleTableModules = [
     {
         name: 'memoryInfo',
-        template: '<key-value-list heading="内存信息(B)" module-name="mem" info="/proc/meminfo 文件读出"></key-value-list>'
+        template: '<key-value-list heading="内存信息(B)" module-name="memory" info="/proc/meminfo 文件读出"></key-value-list>'
     }, {
         name: 'cpuInfo',
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
