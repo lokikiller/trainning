@@ -3,7 +3,7 @@
 
 '''
 FileName:   collector
-Author:     Hao Tingyi
+Author:     Hao Tingyi / Zhou Boyu
 @contact:   lokikiller@126.com
 @version:   $
 
