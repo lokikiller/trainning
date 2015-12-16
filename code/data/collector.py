@@ -55,8 +55,7 @@ class DataCollection(object):
         return result
 
     def get_memory(self):
-        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers: \
-        \|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
+        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers:\|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         list = []
         for val in process.communicate()[0].strip().split('\n'):
@@ -85,6 +84,13 @@ class DataCollection(object):
         for i in range(3):
             result[key_list[i]] = data[i]
 
+        return result
+
+    def get_all(self):
+        cpu_result=self.get_cpu()
+        memory_result=self.get_memory()
+        load_result=self.get_load()
+        result=dict(cpu_result.items()+memory_result.items()+load_result.items())
         return result
 
     def __raise_no_module(self):
