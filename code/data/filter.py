@@ -63,7 +63,7 @@ class DataFilter(threading.Thread):
         for index, items in enumerate(lists):
             storages = {"time": time.time(), "name": self.unique,
                         "data": items}
-            self.db[collection + dbnames[index]].insert_one(storages)
+            self.db[collection + '_' + dbnames[index]].insert_one(storages)
 
     def __new_list(self):
         load_list = [0 for i in range(len(self.LOAD_PARAMS))]

@@ -18,7 +18,7 @@ from pymongo import MongoClient
 
 
 class Storage(object):
-    def __int__(self):
+    def __init__(self):
         host = os.environ.get('MONGO_HOST')
         if not host:
             host = 'localhost'
@@ -31,7 +31,3 @@ class Storage(object):
 
     def conn(self):
         return self.client['performance']
-
-
-s = Storage()
-s.conn()
