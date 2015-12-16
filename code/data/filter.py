@@ -18,6 +18,8 @@ Changelog:
 from collector import DataCollection
 import time
 import threading
+from storage import Storage
+import socket
 
 
 class DataFilter(threading.Thread):
@@ -36,6 +38,13 @@ class DataFilter(threading.Thread):
 
         self.handler = DataHandler()
 
+        db = Storage()
+        self.db = db.conn()
+
+        hostname = socket.getfqdn(socket.gethostname())
+        ip = socket.gethostbyname(hostname)
+        self.unique = hostname + '/' + ip
+
     def __pre_filter(self, lists):
         dataSet = self.handler.catch_data()
         for index, datas in enumerate(dataSet):
@@ -47,7 +56,14 @@ class DataFilter(threading.Thread):
         res = []
         for index, items in enumerate(lists):
             res.append(self.handler.get_data(items, params_list[index]))
-        self.handler.store_data(res, collection)
+        self.__store_data(res, collection)
+
+    def __store_data(self, lists, collection):
+        dbnames = ['load', 'cpu', 'memory']
+        for index, items in enumerate(lists):
+            storages = {"time": time.time(), "name": self.unique,
+                        "data": items}
+            self.db[collection + dbnames[index]].insert_one(storages)
 
     def __new_list(self):
         load_list = [0 for i in range(len(self.LOAD_PARAMS))]
@@ -128,11 +144,6 @@ class DataHandler(object):
             res[params_list[i]] = list[i]
         return res
 
-    def store_data(self, lists, collection):
-        # TODO: store data into DataBase Mongo
-        print collection + ":"
-        print lists
-
     def catch_data(self):
         return (DataCollection('load').catch(), DataCollection(
             'cpu').catch(), DataCollection('memory').catch())
@@ -142,6 +153,7 @@ def main():
     filter = DataFilter()
     filter.setDaemon(True)
     filter.run()
+
 
 if __name__ == '__main__':
     main()
