@@ -4,7 +4,7 @@
 '''
 FileName:   module
 Author:     Hao Tingyi / Zhou Boyu
-@contact:   lokikiller@126.com
+@contact:   lokikiller@126.com / zby22013@163.com
 @version:   $
 
 Description:
