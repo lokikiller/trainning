@@ -72,7 +72,8 @@ class DataFilter(threading.Thread):
             tb = self.db[collection + '_' + dbnames[index]]
             tb.insert_one(storages)
             if tb.count() > limit:
-                tb.delete_one(tb.find().sort('time').limit(1).next())
+                data = tb.find().sort('time').limit(1).next()
+                tb.find_one_and_delete({'_id': data['_id']})
 
     def __new_list(self):
         load_list = [0 for i in range(len(self.LOAD_PARAMS))]
@@ -136,7 +137,7 @@ class DataFilter(threading.Thread):
                                          "one_day"):
                             one_day_size = 0
 
-            time.sleep(2)
+            time.sleep(30)
 
 
 class DataHandler(object):
