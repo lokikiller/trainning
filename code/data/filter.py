@@ -45,6 +45,11 @@ class DataFilter(threading.Thread):
         ip = socket.gethostbyname(hostname)
         self.unique = hostname + '/' + ip
 
+        self.one_min = 30
+        self.five_min = 36
+        self.thirty_min = 48
+        self.one_day = 30
+
     def __pre_filter(self, lists):
         dataSet = self.handler.catch_data()
         for index, datas in enumerate(dataSet):
@@ -60,10 +65,14 @@ class DataFilter(threading.Thread):
 
     def __store_data(self, lists, collection):
         dbnames = ['load', 'cpu', 'memory']
+        limit = getattr(self, collection)
         for index, items in enumerate(lists):
             storages = {"time": time.time(), "name": self.unique,
                         "data": items}
-            self.db[collection + '_' + dbnames[index]].insert_one(storages)
+            tb = self.db[collection + '_' + dbnames[index]]
+            tb.insert_one(storages)
+            if tb.count() > limit:
+                tb.delete_one(tb.find().sort('time').limit(1).next())
 
     def __new_list(self):
         load_list = [0 for i in range(len(self.LOAD_PARAMS))]
@@ -127,7 +136,7 @@ class DataFilter(threading.Thread):
                                          "one_day"):
                             one_day_size = 0
 
-            time.sleep(30)
+            time.sleep(2)
 
 
 class DataHandler(object):
