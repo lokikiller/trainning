@@ -1,0 +1,27 @@
+<div class="plugin">
+    <top-bar heading="heading" last-updated="lastGet" no-refresh-btn></top-bar>
+
+    <div class="plugin-body no-padding">
+        <div class="title">
+            <div class="btn-group">
+                <button class="btn btn-monitor selected" ng-click>1
+                    min</button>
+                <button class="btn btn-monitor" ng-click>5 min</button>
+                <button class="btn btn-monitor" ng-click>30 min</button>
+                <button class="btn btn-monitor" ng-click>1 day</button>
+            </div>
+        </div>
+
+        <h4 class="chart-title">
+            {{ collection }}
+            <div class="chart-label">
+                interval: <span>{{ interval }}</span>
+            </div>
+        </h4>
+
+        <highchart series="chart.series" title="chart.title"
+                   options="chart.options"></highchart>
+    </div>
+</div>
+
+</plugin>

@@ -14,7 +14,17 @@ routerApp.service('server', ['$http', '$rootScope', '$location', function ($http
 
 }]);
 
+routerApp.service('performance', ['$http', '$rootScope', '$location', function ($http, $rootScope, $location) {
+    this.get = function (collectionName, callback) {
+        var collectionAddress = 'performance/?collection=' + collectionName;
+
+        return $http.get(collectionAddress).then(function (response) {
+            return callback(response.data);
+        });
+    }
+}]);
+
+
 routerApp.run(function (server, $location, $rootScope) {
     $location.path('/system-status');
 });
-

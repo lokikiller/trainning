@@ -246,6 +246,15 @@ var simpleTableModules = [
     }, {
         name: 'cpuInfo',
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
+    }, {
+        name: 'loadSplineChart',
+        template: '<spline-chart heading="load trend" collection-name="one_min_load"></spline-chart>'
+    }, {
+        name: 'cpuSplineChart',
+        template: '<spline-char heading="cpu trend" collection-name="one_min_cpu"></spline-char>'
+    }, {
+        name: 'memorySplineChart',
+        template: '<spline-chart heading="memory trend" collection-name="one_min_memory"></spline-chart>'
     }
 ];
 
@@ -266,3 +275,12 @@ simpleTableModules.forEach(function (module, key) {
     }]);
 
 });
+
+
+routerApp.directive('splineChart', ['performance', function(performance){
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/static/app/spline-chart.html'
+    }
+}]);
