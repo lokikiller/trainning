@@ -248,13 +248,13 @@ var simpleTableModules = [
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
     }, {
         name: 'loadSplineChart',
-        template: '<spline-chart heading="load trend" collection-name="one_min_load"></spline-chart>'
+        template: '<spline-chart heading="load trend" collection="load" inter="one_min" intime="1 min"></spline-chart>'
     }, {
         name: 'cpuSplineChart',
-        template: '<spline-char heading="cpu trend" collection-name="one_min_cpu"></spline-char>'
+        template: '<spline-char heading="cpu trend" collection="cpu" inter="one_min" intime="1 min"></spline-char>'
     }, {
         name: 'memorySplineChart',
-        template: '<spline-chart heading="memory trend" collection-name="one_min_memory"></spline-chart>'
+        template: '<spline-chart heading="memory trend" collection="memory" inter="one_min" intime="1 min"></spline-chart>'
     }
 ];
 
@@ -277,10 +277,25 @@ simpleTableModules.forEach(function (module, key) {
 });
 
 
-routerApp.directive('splineChart', ['performance', function(performance){
+routerApp.directive('splineChart', ['$interval', '$compile', 'performance', function($interval, $compile, performance){
     return {
         restrict: 'E',
-        scope: {},
-        templateUrl: '/static/app/spline-chart.html'
+        scope: {
+            heading: '@',
+            collection: '@',
+            inter: '@',
+            intime: '@',
+            refreshRate: '='
+        },
+        templateUrl: '/static/app/spline-chart.html',
+        link: function(scope, element) {
+            var reset = function() {
+                var seriesArray = scope.chart.series;
+                var rndIdx = Math.floor(Math.random() * seriesArray.length);
+                seriesArray.splice(rndIdx, 1);
+            }
+        }
     }
 }]);
+
+
