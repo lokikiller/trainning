@@ -55,8 +55,8 @@ class DataCollection(object):
         return result
 
     def get_memory(self):
-        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers: \
-        \|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
+        cmd = "cat /proc/meminfo | grep -w 'MemTotal:\|MemFree:\|Buffers:" \
+              "\|Cached:\|Active:\|Inactive:\|SwapTotal:\|SwapFree:'"
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         list = []
         for val in process.communicate()[0].strip().split('\n'):
