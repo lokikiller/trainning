@@ -2,7 +2,7 @@
  * Created by root on 12/11/15.
  */
 
-var routerApp = angular.module('routerApp', ['ngRoute', 'highcharts-ng']);
+var routerApp = angular.module('routerApp', ['ngRoute']);
 
 routerApp.config(['$routeProvider',
     function ($routeProvider) {
@@ -248,13 +248,13 @@ var simpleTableModules = [
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
     }, {
         name: 'loadSplineChart',
-        template: '<spline-chart heading="load trend" collection-name="one_min_load"></spline-chart>'
+        template: '<spline-chart-load heading="load trend" collection-name="one_min_load" unique="load"></spline-chart-load>'
     }, {
         name: 'cpuSplineChart',
-        template: '<spline-chart heading="cpu trend" collection-name="one_min_cpu" unit="%"></spline-chart>'
+        template: '<spline-chart-cpu heading="cpu trend" collection-name="one_min_cpu" unit="%" unique="cpu"></spline-chart-cpu>'
     }, {
         name: 'memorySplineChart',
-        template: '<spline-chart heading="memory trend" collection-name="one_min_memory" unit="B"></spline-chart>'
+        template: '<spline-chart-memory heading="memory trend" collection-name="one_min_memory" unit="B" unique="memory"></spline-chart-memory>'
     }
 ];
 
@@ -277,35 +277,39 @@ simpleTableModules.forEach(function (module, key) {
 });
 
 
-routerApp.directive('splineChart', ['$interval', '$compile', 'performance', function ($interval, $compile, performance) {
+routerApp.directive('splineChartLoad', ['performance', function (performance) {
     return {
         restrict: 'E',
         scope: {
             heading: '@',
             collectionName: '@',
-            inter: '@',
-            intime: '@',
             unit: '@',
-            refreshRate: '=',
+            unique: '@',
+            refreshRate: '='
         },
-        templateUrl: '/static/app/spline-chart.html',
-        link: function (scope, element) {
+        templateUrl: '/static/app/spline-chart-load.html',
+        link: function (scope, element, attrs) {
+            scope.lastGet = new Date().getTime();
             scope.reset = function () {
-                scope.highchartsNG.series = [];
+                scope.highcharts.series = [];
             };
 
             scope.options = {
                 type: 'spline'
             }
 
-            scope.highchartsNG = {
-                options: {
-                    chart: {
-                        type: 'spline'
-                    },
-                    global: {
-                        useUTC: false
-                    }
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+            scope.highcharts = new Highcharts.Chart({
+                chart: {
+                    renderTo: scope.unique,
+                    type: 'spline',
+                    height: 400,
+                    width: 400
                 },
                 title: {
                     text: ''
@@ -341,7 +345,7 @@ routerApp.directive('splineChart', ['$interval', '$compile', 'performance', func
                 },
                 tooltip: {
                     formatter: function () {
-                        return '<b>' + scope.heading + this.series.name + '</b><br>'
+                        return '<b>' + this.series.name + '</b><br>'
                             + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x)
                             + '<br>' + Highcharts.numberFormat(this.y, 2) + scope.unit;
                     }
@@ -349,16 +353,13 @@ routerApp.directive('splineChart', ['$interval', '$compile', 'performance', func
                 exporting: {
                     enabled: false
                 },
-                series: [],
-                loading: false
-            }
+                series: []
+            });
 
             scope.getData = function () {
-                scope.reset()
+                scope.reset();
 
                 performance.get(scope.collectionName, function (serverResponseData) {
-                    scope.lastGet = new Date().getTime();
-
                     var obj = serverResponseData;
                     ddata = [];
                     for (var i = 0; i < length(obj[0].data); i++) {
@@ -383,14 +384,14 @@ routerApp.directive('splineChart', ['$interval', '$compile', 'performance', func
                     }
 
                     for (var i = 0; i < ddata.length; i++) {
-                        scope.highchartsNG.series.push({
+                        scope.highcharts.addSeries({
                             name: keys[i],
                             data: ddata[i]
                         });
                     }
 
                 });
-            }
+            };
 
             function length(o) {
                 var count = 0;
@@ -404,3 +405,389 @@ routerApp.directive('splineChart', ['$interval', '$compile', 'performance', func
         }
     }
 }]);
+
+routerApp.directive('splineChartCpu', ['performance', function (performance) {
+    return {
+        restrict: 'E',
+        scope: {
+            heading: '@',
+            collectionName: '@',
+            unit: '@',
+            unique: '@',
+            refreshRate: '='
+        },
+        templateUrl: '/static/app/spline-chart-cpu.html',
+        link: function (scope, element, attrs) {
+            scope.lastGet = new Date().getTime();
+            scope.reset = function () {
+                scope.highcharts.series = [];
+            };
+
+            scope.options = {
+                type: 'spline'
+            }
+
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+            scope.highcharts = new Highcharts.Chart({
+                chart: {
+                    renderTo: scope.unique,
+                    type: 'spline',
+                    height: 400,
+                    width: 400
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value + scope.unit;
+                        }
+                    }
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 2.0,
+                        fillOpacity: 0.1,
+                        marker: {
+                            enabled: false,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    radius: 2
+                                }
+                            }
+                        },
+                        shadow: false
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.series.name + '</b><br>'
+                            + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x)
+                            + '<br>' + Highcharts.numberFormat(this.y, 2) + scope.unit;
+                    }
+                },
+                exporting: {
+                    enabled: false
+                },
+                series: []
+            });
+
+            scope.getData = function () {
+                scope.reset();
+
+                performance.get(scope.collectionName, function (serverResponseData) {
+                    var obj = serverResponseData;
+                    ddata = [];
+                    for (var i = 0; i < length(obj[0].data); i++) {
+                        ddata[i] = new Array();
+                    }
+
+                    keys = [];
+                    for (key in obj[0].data) {
+                        keys.push(key);
+                    }
+
+                    for (key in obj) {
+                        var dtime = obj[key].time;
+                        i = 0;
+                        for (k in obj[key].data) {
+                            ddata[i].push({
+                                x: dtime,
+                                y: parseFloat(obj[key].data[k])
+                            });
+                            i++;
+                        }
+                    }
+
+                    for (var i = 0; i < ddata.length; i++) {
+                        scope.highcharts.addSeries({
+                            name: keys[i],
+                            data: ddata[i]
+                        });
+                    }
+
+                });
+            };
+
+            function length(o) {
+                var count = 0;
+                for (var i in o) {
+                    count++;
+                }
+                return count;
+            }
+
+            scope.getData();
+        }
+    }
+}]);
+
+routerApp.directive('splineChartMemory', ['performance', function (performance) {
+    return {
+        restrict: 'E',
+        scope: {
+            heading: '@',
+            collectionName: '@',
+            unit: '@',
+            unique: '@',
+            refreshRate: '=',
+        },
+        templateUrl: '/static/app/spline-chart-memory.html',
+        link: function (scope, element, attrs) {
+            scope.lastGet = new Date().getTime();
+            scope.reset = function () {
+                scope.highcharts.series = [];
+            };
+
+            scope.options = {
+                type: 'spline'
+            }
+
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+            scope.highcharts = new Highcharts.Chart({
+                chart: {
+                    renderTo: scope.unique,
+                    type: 'spline',
+                    height: 400,
+                    width: 400
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value + scope.unit;
+                        }
+                    }
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 2.0,
+                        fillOpacity: 0.1,
+                        marker: {
+                            enabled: false,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    radius: 2
+                                }
+                            }
+                        },
+                        shadow: false
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.series.name + '</b><br>'
+                            + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x)
+                            + '<br>' + Highcharts.numberFormat(this.y, 2) + scope.unit;
+                    }
+                },
+                exporting: {
+                    enabled: false
+                },
+                series: []
+            });
+
+            scope.getData = function () {
+                scope.reset();
+
+                performance.get(scope.collectionName, function (serverResponseData) {
+                    var obj = serverResponseData;
+                    ddata = [];
+                    for (var i = 0; i < length(obj[0].data); i++) {
+                        ddata[i] = new Array();
+                    }
+
+                    keys = [];
+                    for (key in obj[0].data) {
+                        keys.push(key);
+                    }
+
+                    for (key in obj) {
+                        var dtime = obj[key].time;
+                        i = 0;
+                        for (k in obj[key].data) {
+                            ddata[i].push({
+                                x: dtime,
+                                y: parseFloat(obj[key].data[k])
+                            });
+                            i++;
+                        }
+                    }
+
+                    for (var i = 0; i < ddata.length; i++) {
+                        scope.highcharts.addSeries({
+                            name: keys[i],
+                            data: ddata[i]
+                        });
+                    }
+
+                });
+            };
+
+            function length(o) {
+                var count = 0;
+                for (var i in o) {
+                    count++;
+                }
+                return count;
+            }
+
+            scope.getData();
+        }
+    }
+}]);
+
+//routerApp.directive('historyChart', ['$interval', '$compile', 'performance', function ($interval, $compile, performance) {
+//    return {
+//        restrict: 'E',
+//        replace: true,
+//        scope: {
+//            collectionName: '=',
+//            unit: '=',
+//            refreshRate: '='
+//        },
+//        template: '<div></div>',
+//        link: function (scope, element, attrs) {
+//            console.log(attrs.id);
+//            scope.reset = function () {
+//                scope.highcharts.series = [];
+//            };
+//
+//            scope.options = {
+//                type: 'spline'
+//            }
+//
+//            Highcharts.setOptions({
+//                global: {
+//                    useUTC: false
+//                }
+//            });
+//
+//            scope.highcharts = new Highcharts.Chart({
+//                chart: {
+//                    renderTo: attrs.id,
+//                    type: 'spline',
+//                    height: 400,
+//                    width: 400
+//                },
+//                title: {
+//                    text: ''
+//                },
+//                xAxis: {
+//                    type: 'datetime'
+//                },
+//                yAxis: {
+//                    title: {
+//                        text: ''
+//                    },
+//                    labels: {
+//                        formatter: function () {
+//                            return this.value + scope.unit;
+//                        }
+//                    }
+//                },
+//                plotOptions: {
+//                    spline: {
+//                        lineWidth: 2.0,
+//                        fillOpacity: 0.1,
+//                        marker: {
+//                            enabled: false,
+//                            states: {
+//                                hover: {
+//                                    enabled: true,
+//                                    radius: 2
+//                                }
+//                            }
+//                        },
+//                        shadow: false
+//                    }
+//                },
+//                tooltip: {
+//                    formatter: function () {
+//                        return '<b>' + this.series.name + '</b><br>'
+//                            + Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x)
+//                            + '<br>' + Highcharts.numberFormat(this.y, 2) + scope.unit;
+//                    }
+//                },
+//                exporting: {
+//                    enabled: false
+//                },
+//                series: []
+//            });
+//
+//            scope.getData = function () {
+//                scope.reset();
+//
+//                performance.get(scope.collectionName, function (serverResponseData) {
+//                    var obj = serverResponseData;
+//                    ddata = [];
+//                    for (var i = 0; i < length(obj[0].data); i++) {
+//                        ddata[i] = new Array();
+//                    }
+//
+//                    keys = [];
+//                    for (key in obj[0].data) {
+//                        keys.push(key);
+//                    }
+//
+//                    for (key in obj) {
+//                        var dtime = obj[key].time;
+//                        i = 0;
+//                        for (k in obj[key].data) {
+//                            ddata[i].push({
+//                                x: dtime,
+//                                y: parseFloat(obj[key].data[k])
+//                            });
+//                            i++;
+//                        }
+//                    }
+//
+//                    for (var i = 0; i < ddata.length; i++) {
+//                        scope.highcharts.addSeries({
+//                            name: keys[i],
+//                            data: ddata[i]
+//                        });
+//                    }
+//
+//                });
+//            };
+//
+//            function length(o) {
+//                var count = 0;
+//                for (var i in o) {
+//                    count++;
+//                }
+//                return count;
+//            }
+//
+//            scope.getData();
+//        }
+//    }
+//}]);
