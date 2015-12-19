@@ -311,13 +311,13 @@ var simpleTableModules = [
         template: '<key-value-list heading="负载信息" module-name="load" info="/proc/avgload 文件读出"></key-value-list>'
     }, {
         name: 'loadSplineChart',
-        template: '<spline-chart-load heading="load trend" collection-name="one_min_load" unit=""></spline-chart-load>'
+        template: '<spline-chart-load heading="负载趋势图" collection-name="one_min_load" unit=""></spline-chart-load>'
     }, {
         name: 'cpuSplineChart',
-        template: '<spline-chart-cpu heading="cpu trend" collection-name="one_min_cpu" unit="%"></spline-chart-cpu>'
+        template: '<spline-chart-cpu heading="CPU趋势图" collection-name="one_min_cpu" unit="%"></spline-chart-cpu>'
     }, {
         name: 'memorySplineChart',
-        template: '<spline-chart-memory heading="memory trend" collection-name="one_min_memory" unit="B"></spline-chart-memory>'
+        template: '<spline-chart-memory heading="内存趋势图" collection-name="one_min_memory" unit="B"></spline-chart-memory>'
     }
 ];
 
