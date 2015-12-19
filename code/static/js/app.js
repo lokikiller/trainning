@@ -277,9 +277,9 @@ simpleTableModules.forEach(function (module, key) {
 });
 
 Highcharts.setOptions({
-	global: {
-		useUTC: false
-	}
+    global: {
+        useUTC: false
+    }
 });
 
 var ids = ['load', 'cpu', 'memory'];
@@ -289,7 +289,7 @@ ids.forEach(function (mod, key) {
         return s.toUpperCase()
     });
 
-    routerApp.directive('splineChart' + name, ['performance', function (performance) {
+    routerApp.directive('splineChart' + name, ['$interval', '$compile', 'performance', function ($interval, $compile, performance) {
         return {
             restrict: 'E',
             scope: {
@@ -300,9 +300,69 @@ ids.forEach(function (mod, key) {
             },
             templateUrl: '/static/app/spline-chart-' + mod + '.html',
             link: function (scope, element, attrs) {
-                //scope.reset = function () {
-                //    scope.highcharts.series = [];
-                //};
+                scope.isOne = true;
+                scope.isFive = false;
+                scope.isThirty = false;
+                scope.isDay = false;
+
+                scope.reset = function () {
+                    var slength = scope.highcharts.series.length;
+                    for (var i = 0; i < slength; i++) {
+                        scope.highcharts.series[0].remove();
+                    }
+                }
+
+                scope.onemin = function () {
+                    scope.isOne = true;
+                    scope.isFive = false;
+                    scope.isThirty = false;
+                    scope.isDay = false;
+
+                    removeInterval();
+                    refreshRate = 60 * 1000;
+                    scope.collectionName = 'one_min_' + mod;
+                    scope.getData();
+                    intervalRef = $interval(scope.getData, refreshRate);
+                }
+
+                scope.fivemin = function () {
+                    scope.isOne = false;
+                    scope.isFive = true;
+                    scope.isThirty = false;
+                    scope.isDay = false;
+
+                    removeInterval();
+                    refreshRate = 5 * 60 * 1000;
+                    scope.collectionName = 'five_min_' + mod;
+                    scope.getData();
+                    intervalRef = $interval(scope.getData, refreshRate);
+                }
+
+                scope.thirtymin = function () {
+                    scope.isOne = false;
+                    scope.isFive = false;
+                    scope.isThirty = true;
+                    scope.isDay = false;
+
+                    removeInterval();
+                    refreshRate = 30 * 60 * 1000;
+                    scope.collectionName = 'thirty_min_' + mod;
+                    scope.getData();
+                    intervalRef = $interval(scope.getData, refreshRate);
+                }
+
+                scope.oneday = function () {
+                    scope.isOne = false;
+                    scope.isFive = false;
+                    scope.isThirty = false;
+                    scope.isDay = true;
+
+                    removeInterval();
+                    refreshRate = 24 * 60 * 60 * 1000;
+                    scope.collectionName = 'one_day_' + mod;
+                    scope.getData();
+                    intervalRef = $interval(scope.getData, refreshRate);
+                }
 
                 scope.highcharts = new Highcharts.Chart({
                     chart: {
@@ -361,39 +421,52 @@ ids.forEach(function (mod, key) {
 
                 scope.getData = function () {
                     scope.lastGet = new Date().getTime();
-                    //scope.reset();
 
                     performance.get(scope.collectionName, function (serverResponseData) {
                         var obj = serverResponseData;
-                        ddata = [];
-                        for (var i = 0; i < length(obj[0].data); i++) {
-                            ddata[i] = new Array();
-                        }
+                        if (obj.length != 0) {
+                            ddata = [];
+                            for (var i = 0; i < length(obj[0].data); i++) {
+                                ddata[i] = new Array();
+                            }
 
-                        keys = [];
-                        for (key in obj[0].data) {
-                            keys.push(key);
-                        }
+                            keys = [];
+                            for (key in obj[0].data) {
+                                keys.push(key);
+                            }
 
-                        for (key in obj) {
-                            var dtime = obj[key].time;
-                            i = 0;
-                            for (k in obj[key].data) {
-                                ddata[i].push({
-                                    x: dtime * 1000,
-                                    y: parseFloat(obj[key].data[k])
-                                });
-                                i++;
+                            for (key in obj) {
+                                var dtime = obj[key].time;
+                                i = 0;
+                                for (k in obj[key].data) {
+                                    ddata[i].push({
+                                        x: dtime * 1000,
+                                        y: parseFloat(obj[key].data[k])
+                                    });
+                                    i++;
+                                }
+                            }
+
+                            slength = scope.highcharts.series.length;
+
+                            if (slength == 0) {
+                                for (var i = 0; i < ddata.length; i++) {
+                                    scope.highcharts.addSeries({
+                                        name: keys[i],
+                                        data: ddata[i]
+                                    });
+                                }
+                            } else {
+                                for (var i = 0; i < slength; i++) {
+                                    scope.highcharts.series[i].setData(ddata[i]);
+                                }
+                            }
+                        } else {
+                            if (scope.highcharts.series.length != 0) {
+                                scope.reset();
+                                removeInterval();
                             }
                         }
-
-                        for (var i = 0; i < ddata.length; i++) {
-                            scope.highcharts.addSeries({
-                                name: keys[i],
-                                data: ddata[i]
-                            }, false);
-                        }
-
                     });
                 };
 
@@ -406,6 +479,13 @@ ids.forEach(function (mod, key) {
                 }
 
                 scope.getData();
+                var refreshRate = (angular.isDefined(scope.refreshRate)) ? scope.refreshRate : 60 * 1000;
+                var intervalRef = $interval(scope.getData, refreshRate);
+                var removeInterval = function () {
+                    $interval.cancel(intervalRef);
+                };
+
+                element.on('$destroy', removeInterval);
             }
         }
     }]);

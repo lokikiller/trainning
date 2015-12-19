@@ -437,34 +437,72 @@ canvas {
 
 /* spline chart css*/
 
-/*.btn-monitor {*/
-    /*background: #eee;*/
-    /*color: #777;*/
-    /*margin: 0;*/
-    /*border-bottom: 1px solid #ddd;*/
-    /*-webkit-border-radius: 0;*/
-    /*-moz-border-radius: 0;*/
-    /*border-radius: 0;*/
-    /*padding: 5px 12px;*/
-    /*font-size: 12px;*/
-/*}*/
+.btn-monitor {
+    background: #eee;
+    color: #777;
+    margin: 0;
+    border-bottom: 1px solid #ddd;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    padding: 5px 12px;
+    font-size: 12px;
+}
 
-/*.btn-monitor .selected {*/
-    /*background: #1f90c8;*/
-    /*color: #fff;*/
-/*}*/
+.selected {
+    background: #1f90c8;
+    color: #fff;
+}
 
-/*.chart-title {*/
-    /*text-align: center;*/
-    /*margin-top: 10px;*/
-    /*margin-bottom: 5px;*/
-    /*line-height: 30px;*/
-/*}*/
+.btn-group {
+    float: right;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
 
-/*.chart-title .chart-label {*/
-    /*float: right;*/
-    /*margin-left: 10px;*/
-    /*display: inline;*/
-    /*font-size: 12px;*/
-    /*color: #777;*/
-/*}*/
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.btn-group > .btn:first-child {
+    margin-left: 0px;
+}
+
+.btn-group > .btn, .btn-group-vertical > .btn {
+    position: relative;
+    float: left;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -moz-user-select: none;
+}
+
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button, select {
+    text-transform: none;
+}
+
+button {
+    overflow: visible;
+}
+

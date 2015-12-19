@@ -38,7 +38,7 @@ class Transfer(object):
 
     def get_data(self, collection):
         res = []
-        for item in self.db[collection].find():
+        for item in self.db[collection].find().sort('time'):
             del item['_id']
             res.append(item)
         return res
