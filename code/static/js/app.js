@@ -308,7 +308,7 @@ var simpleTableModules = [
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
     }, {
         name: 'loadInfo',
-        template: '<key-value-list heading="LOAD信息(%)" module-name="load" info="/proc/stats 文件读出"></key-value-list>'
+        template: '<key-value-list heading="负载信息" module-name="load" info="/proc/avgload 文件读出"></key-value-list>'
     }, {
         name: 'loadSplineChart',
         template: '<spline-chart-load heading="load trend" collection-name="one_min_load" unit=""></spline-chart-load>'
