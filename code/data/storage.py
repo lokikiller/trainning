@@ -31,3 +31,4 @@ class Storage(object):
 
     def conn(self):
         return self.client['performance']
+

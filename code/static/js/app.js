@@ -8,13 +8,39 @@ routerApp.config(['$routeProvider',
     function ($routeProvider) {
         $routeProvider.when('/loading', {
             templateUrl: '/static/app/loading.html',
-        }).when('/system-status', {
-            templateUrl: '/static/app/system-status.html'
+        }).when('/load-status', {
+            templateUrl: '/static/app/load-status.html'
+        }).when('/cpu-status', {
+            templateUrl: '/static/app/cpu-status.html'
+        }).when('/memory-status', {
+            templateUrl: '/static/app/memory-status.html'
         }).otherwise({
             redirectTo: '/loading'
         });
     }
 ]);
+
+routerApp.directive('navBar', function ($location) {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/app/navbar.html',
+        link: function (scope) {
+            scope.items = [
+                'load-status',
+                'cpu-status',
+                'memory-status'
+            ];
+
+            scope.getNavItemName = function (url) {
+                return url.replace('-', ' ');
+            };
+
+            scope.isActive = function (route) {
+                return '/' + route === $location.path();
+            };
+        }
+    }
+});
 
 routerApp.directive('loader', function () {
     return {
@@ -160,6 +186,24 @@ routerApp.directive('multiLineChart', ['$interval', '$compile', 'server', functi
             }, {
                 strokeStyle: 'rgba(255, 255, 0, 1)',
                 lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(255, 0, 255, 1)',
+                lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(0, 0, 0, 1)',
+                lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(0, 255, 255, 1)',
+                lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(255, 0, 125, 1)',
+                lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(255, 125, 0, 1)',
+                lineWidth: 1
+            }, {
+                strokeStyle: 'rgba(125, 255, 0, 1)',
+                lineWidth: 1
             }];
 
             var canvas = element.find('canvas')[0];
@@ -239,6 +283,22 @@ routerApp.directive('cpuAvgLoadChart', ['server', function (server) {
     };
 }]);
 
+routerApp.directive('cpuChart', ['server', function (server) {
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/static/app/cpu-chart.html'
+    };
+}]);
+
+routerApp.directive('memoryChart', ['server', function (server) {
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/static/app/memory-chart.html'
+    };
+}]);
+
 var simpleTableModules = [
     {
         name: 'memoryInfo',
@@ -246,6 +306,9 @@ var simpleTableModules = [
     }, {
         name: 'cpuInfo',
         template: '<key-value-list heading="CPU信息(%)" module-name="cpu" info="/proc/stats 文件读出"></key-value-list>'
+    }, {
+        name: 'loadInfo',
+        template: '<key-value-list heading="LOAD信息(%)" module-name="load" info="/proc/stats 文件读出"></key-value-list>'
     }, {
         name: 'loadSplineChart',
         template: '<spline-chart-load heading="load trend" collection-name="one_min_load" unit=""></spline-chart-load>'

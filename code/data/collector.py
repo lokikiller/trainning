@@ -33,7 +33,7 @@ class DataCollection(object):
         for val in cpu_array1:
             total1 += int(val)
 
-        time.sleep(1)
+        time.sleep(0.5)
 
         process2 = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         cpu_array2 = process2.communicate()[0].strip().split(' ')

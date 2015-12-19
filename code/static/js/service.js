@@ -26,5 +26,9 @@ routerApp.service('performance', ['$http', '$rootScope', '$location', function (
 
 
 routerApp.run(function (server, $location, $rootScope) {
-    $location.path('/system-status');
+    var currentRoute = $location.path();
+    var currentTab = (currentRoute == '/loading') ? 'load-status': currentRoute;
+    localStorage.setItem('currentTab', currentTab);
+
+    $location.path('/load-status');
 });
