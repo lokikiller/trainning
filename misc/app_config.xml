@@ -1,0 +1,9 @@
+<uwsgi>
+	<pythonpath>/var/www/app/app</pythonpath>
+	<module>router</module>
+	<callable>app</callable>
+	<socket>127.0.0.1:3031</socket>
+	<master/>
+	<processes>4</processes>
+	<memory-report/>
+</uwsgi>
