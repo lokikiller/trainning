@@ -87,6 +87,14 @@ class DataCollection(object):
 
         return result
 
+    def get_all(self):
+        cpu_result = self.get_cpu()
+        memory_result = self.get_memory()
+        load_result = self.get_load()
+        result = collections.OrderedDict(
+            cpu_result.items() + memory_result.items() + load_result.items())
+        return result
+
     def __raise_no_module(self):
         raise ModuleException('no such module ' + self.mod)
 

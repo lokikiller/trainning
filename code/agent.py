@@ -18,7 +18,7 @@ Description:
                             use module MODULE
 
     Modules:
-      load, cpu, memory
+      all, load, cpu, memory
 Changelog:
     create at 2015.12.14
 '''
@@ -54,7 +54,7 @@ class CollectorCLI(object):
                            help='use module %(dest)s')
 
         groupmodules = parser.add_argument_group('Modules')
-        groupmodules.add_argument('load, cpu, memory', action='store_const',
+        groupmodules.add_argument('all, load, cpu, memory', action='store_const',
                                   const=0)
 
         args = parser.parse_args()
