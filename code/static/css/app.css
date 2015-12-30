@@ -4,6 +4,18 @@
     letter-spacing: .1rem;
 }
 
+.plugin {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.top-bar {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
 html {
     margin-top: 0px;
     padding-top: 0;
