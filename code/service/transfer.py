@@ -42,3 +42,14 @@ class Transfer(object):
             del item['_id']
             res.append(item)
         return res
+
+    def get_hosts(self):
+        res = []
+
+        return res
+
+
+db = DB().conn()
+# print db['one_min_load'].distinct('name')
+for val in db['one_min_load'].find({'name':'devops/133.133.134.115'}):
+    print val

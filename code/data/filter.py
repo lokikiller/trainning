@@ -72,7 +72,7 @@ class DataFilter(threading.Thread):
             tb = self.db[collection + '_' + dbnames[index]]
             tb.insert_one(storages)
             if tb.count() > limit:
-                data = tb.find().sort('time').limit(1).next()
+                data = tb.find({'name': self.unique}).sort('time').limit(1).next()
                 tb.find_one_and_delete({'_id': data['_id']})
 
     def __new_list(self):

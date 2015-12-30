@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>sadev 4 Linux Dashboard</title>
+    <title>Linux 监控平台</title>
 
     <!-- Bootstrap core CSS -->
 
@@ -39,7 +39,7 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="index.html" class="site_title"><i
                             class="fa fa-cloud"></i>
-                        <span>SaDev4 Linux</span></a>
+                        <span>监控平台</span></a>
                 </div>
                 <div class="clearfix"></div>
                 <br/>
@@ -50,13 +50,12 @@
 
                     <div class="menu_section">
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> 集群管理 <span
+                            <li><a><i class="fa fa-home"></i> 监控管理 <span
                                     class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu"
                                     style="display: none">
-                                    <li><a href="/host/list">资源池</a>
+                                    <li><a href="#">主机列表</a>
                                     </li>
-                                    <li><a href="#">主节点高可用</a>
                                     </li>
                                 </ul>
                             </li>
@@ -84,7 +83,56 @@
 
 
         <!-- page content -->
-        <div class="right_col" role="main"></div>
+        <div class="right_col" role="main">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>
+                            主机列表
+                            <small>
+                                主机信息及监控视图
+                            </small>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>主机列表</h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <table class="table jambo_table">
+                                    <thead>
+                                    <tr>
+                                        <th>地址</th>
+                                        <th>负载</th>
+                                        <th>CPU使用率</th>
+                                        <th>内存使用率</th>
+                                        <th>详情</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     </div>
