@@ -19,7 +19,7 @@ function getHostList() {
                 var memory = new Number(obj.hostMemory * 100);
                 var thiStr = '<tr rowid=' + obj.hostIP + '><td>' + obj.hostIP +
                     '</td><td>' + obj.hostLoad + '</td><td>' + cpu.toFixed(3) +
-                    '</td><td>' + memory.toFixed(3) + '</td>' +
+                    '%</td><td>' + memory.toFixed(3) + '%</td>' +
                     '<td><a class="id">详情</a></td></tr>';
                 tableStr += thiStr;
             }
