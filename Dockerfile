@@ -26,8 +26,6 @@ COPY ./code /var/www/app/app/
 
 WORKDIR /var/www/app
 
-ENV SERVER_HOST 0.0.0.0
-ENV SERVER_PORT 27100
 ENV MONGO_HOST 0.0.0.0
 ENV MONGO_PORT 27017
 

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SaDev4 监控平台</title>
+
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="../static/fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../static/css/animate.min.css" rel="stylesheet">
+
+    <link href="../static/css/custom.css" rel="stylesheet">
+    <link href="../static/css/index.css" rel="stylesheet">
+
+    <script src="../static/js/jquery-1.11.1.js"></script>
+    <script src="../static/js/custom.js"></script>
+    <script src="../static/js/highcharts.js"></script>
+</head>
+
+
+<body class="nav-md">
+
+<div class="container body">
+
+
+    <div class="main_container">
+
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="#" class="site_title"><i
+                            class="fa fa-cloud"></i> <span>监控平台</span></a>
+                </div>
+                <div class="clearfix"></div>
+
+                <br/>
+
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                    <div class="menu_section">
+                        <ul class="nav side-menu">
+                            <li><a><i class="fa fa-home"></i> 监控管理 <span
+                                    class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu" style="display: none">
+                                    <li><a href="/index.html">主机列表</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- /sidebar menu -->
+
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+
+            <div class="nav_menu">
+                <nav class="" role="navigation">
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /top navigation -->
+
+
+        <!-- page content -->
+        <div class="right_col" role="main" id="maindiv" uuid='{{ uuid }}'>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel tile">
+                        <div class="x_title">
+                            <h2>监测详情
+                                <span><small>负载 CPU 内存历史趋势图
+                                </small></span></h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        
+                        <div class="x_content">
+                            <div class="btn-group" id="chart-group"
+                                 style="float: right;">
+                                <div style="position: relative; float:
+                                        left; padding-right: 10px;">
+                                    <h4>时间间隔</h4>
+                                </div>
+                                <button class="btn btn-monitor selected"
+                                                id="onemin">1分钟</button>
+                                <button class="btn btn-monitor"
+                                                id="fivemin">5分钟</button>
+                                <button class="btn btn-monitor"
+                                                id="thirtymin">30分钟</button>
+                                <button class="btn btn-monitor"
+                                                id="oneday">1天</button>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel tile">
+                        <div class="x_title">
+                            <h2>负载趋势图</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div id="chart-load">
+                                <div id="loadpic"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel tile">
+                        <div class="x_title">
+                            <h2>CPU趋势图</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div id="chart-cpu">
+                                <div id="cpupic"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel tile">
+                        <div class="x_title">
+                            <h2>内存趋势图</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div id="chart-memory">
+                                <div id="memorypic"></div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+
+<script src="../static/myjs/detail.js"></script>
+</html>
