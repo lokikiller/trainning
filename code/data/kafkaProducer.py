@@ -137,17 +137,17 @@ class KafkaProducer(threading.Thread):
 
 
 class DataHandler(object):
-    def push_data(self, data, list):
+    def push_data(self, data, data_list):
         i = 0
         for val in data.values():
-            if list[i] < val:
-                list[i] = val
+            if data_list[i] < val:
+                data_list[i] = val
             i += 1
 
-    def get_data(self, list, params_list):
+    def get_data(self, data_list, params_list):
         res = dict()
-        for i in xrange(len(list)):
-            res[params_list[i]] = list[i]
+        for i in xrange(len(data_list)):
+            res[params_list[i]] = data_list[i]
         return res
 
     def catch_data(self):
