@@ -21,7 +21,7 @@ class Storage(object):
     def __init__(self):
         host = os.environ.get('MONGO_HOST')
         if not host:
-            host = 'localhost'
+            host = '123.58.165.135'
 
         port = os.environ.get('MONGO_PORT')
         if not port:
