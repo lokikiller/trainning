@@ -13,11 +13,12 @@ Changelog:
         create at 2015.1.6
 '''
 
-from pykafka import KafkaClient
-import time
 import threading
+import time
+
+from pykafka import KafkaClient
+
 from storage import Storage
-import socket
 
 
 class KafkaConsumer(threading.Thread):
@@ -33,10 +34,6 @@ class KafkaConsumer(threading.Thread):
         db = Storage()
         self.db = db.conn()
 
-        hostname = socket.getfqdn(socket.gethostname())
-        ip = socket.gethostbyname(hostname)
-        self.unique = hostname + '/' + ip
-
     def __consume(self):
         consumer = self.topic.get_simple_consumer()
         for message in consumer:
@@ -50,12 +47,12 @@ class KafkaConsumer(threading.Thread):
         dbnames = ['load', 'cpu', 'memory']
         limit = getattr(self, collection)
         for index, items in enumerate(lists):
-            storages = {"time": time.time(), "name": self.unique,
+            storages = {"time": time.time(), "name": self.TOPIC_NAME,
                         "data": items}
             tb = self.db[collection + '_' + dbnames[index]]
             tb.insert_one(storages)
-            if tb.find({'name': self.unique}).count() > limit:
-                data = tb.find({'name': self.unique}).sort('time').limit(
+            if tb.find({'name': self.TOPIC_NAME}).count() > limit:
+                data = tb.find({'name': self.TOPIC_NAME}).sort('time').limit(
                     1).next()
                 tb.find_one_and_delete({'_id': data['_id']})
 
