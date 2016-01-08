@@ -18,10 +18,9 @@ module_start() {
   case "$1" in
     agent)
         python ../code/data/kafkaProducer.py
-        python ../code/data/kafkaConsumer.py
         ;;
-    server)
-        python ../code/data/server.py
+    storage)
+        python ../code/data/kafkaConsumer.py
         ;;
     router)
         python ../code/router.py
@@ -29,7 +28,7 @@ module_start() {
     *)
         echo $"Usage: $0 {start|stop|restart|reload|status} MODULE\n"
         echo "MODULES:\n"
-        echo "agent,  server, router"
+        echo "agent,  storage, router"
         exit 1 
   esac
 }
