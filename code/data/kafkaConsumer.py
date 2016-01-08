@@ -31,6 +31,11 @@ class KafkaConsumer(threading.Thread):
         self.client = KafkaClient(hosts=self.KAFKA_HOSTS)
         self.topic = self.client.topics[self.TOPIC_NAME]
 
+        self.one_min = 30
+        self.five_min = 36
+        self.thirty_min = 48
+        self.one_day = 30
+
         db = Storage()
         self.db = db.conn()
 
@@ -65,7 +70,11 @@ def main():
     for topic_name in TOPICS:
         consumer = KafkaConsumer("123.58.165.135:9092,123.58.165.138:9092",
                                  topic_name)
-        consumer.run()
+        consumer.setDaemon(True)
+        if topic_name == 'node_138':
+            consumer.run()
+        else:
+            consumer.start()
 
 
 if __name__ == '__main__':
