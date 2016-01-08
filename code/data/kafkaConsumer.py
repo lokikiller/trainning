@@ -19,6 +19,7 @@ import threading
 from storage import Storage
 import socket
 
+
 class KafkaConsumer(threading.Thread):
     def __init__(self, kafka_hosts, topic_name):
         threading.Thread.__init__(self)
@@ -53,18 +54,22 @@ class KafkaConsumer(threading.Thread):
                         "data": items}
             tb = self.db[collection + '_' + dbnames[index]]
             tb.insert_one(storages)
-            if tb.count() > limit:
-                data = tb.find().sort('time').limit(1).next()
+            if tb.find({'name': self.unique}).count() > limit:
+                data = tb.find({'name': self.unique}).sort('time').limit(
+                    1).next()
                 tb.find_one_and_delete({'_id': data['_id']})
 
     def run(self):
         self.__consume()
 
+
 def main():
-    TOPICS = [ 'node_135', 'node_138' ]
+    TOPICS = ['node_135', 'node_138']
     for topic_name in TOPICS:
-        consumer = KafkaConsumer("123.58.165.135:9092,123.58.165.138:9092", topic_name)
+        consumer = KafkaConsumer("123.58.165.135:9092,123.58.165.138:9092",
+                                 topic_name)
         consumer.run()
+
 
 if __name__ == '__main__':
     main()

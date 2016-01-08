@@ -22,6 +22,7 @@ import time
 import threading
 import socket
 
+
 class KafkaProducer(threading.Thread):
     def __init__(self, kafka_hosts, topic_name):
         threading.Thread.__init__(self)
@@ -65,7 +66,7 @@ class KafkaProducer(threading.Thread):
 
     def __producer_data(self, lists, collection):
         with self.topic.get_sync_producer() as producer:
-            res = [ lists, collection ]
+            res = [lists, collection]
             message = repr(res)
             producer.produce(message)
 
@@ -110,28 +111,30 @@ class KafkaProducer(threading.Thread):
 
             one_min_size += 1
             if self.__producer(one_min_size, self.ONE_MIN_LIST_SIZE,
-                             five_min_list, one_min_list, "one_min"):
+                               five_min_list, one_min_list, "one_min"):
                 one_min_size = 0
 
                 five_min_size += 1
                 if self.__producer(five_min_size, self.FIVE_MIN_LIST_SIZE,
-                                 thirty_min_list, five_min_list, "five_min"):
+                                   thirty_min_list, five_min_list, "five_min"):
                     five_min_size = 0
 
                     thirty_min_size += 1
                     if self.__producer(thirty_min_size,
-                                     self.THIRTY_MIN_LIST_SIZE,
-                                     one_day_list, thirty_min_list,
-                                     "thirty_min"):
+                                       self.THIRTY_MIN_LIST_SIZE,
+                                       one_day_list, thirty_min_list,
+                                       "thirty_min"):
                         thirty_min_size = 0
 
                         one_day_size += 1
-                        if self.__producer(one_day_size, self.ONE_DAY_LIST_SIZE,
-                                         self.__new_list(), one_day_list,
-                                         "one_day"):
+                        if self.__producer(one_day_size,
+                                           self.ONE_DAY_LIST_SIZE,
+                                           self.__new_list(), one_day_list,
+                                           "one_day"):
                             one_day_size = 0
 
             time.sleep(30)
+
 
 class DataHandler(object):
     def push_data(self, data, list):
@@ -151,17 +154,21 @@ class DataHandler(object):
         return (DataCollection('load').catch(), DataCollection(
             'cpu').catch(), DataCollection('memory').catch())
 
+
 def getTopicName():
     hostname = socket.getfqdn(socket.gethostname())
     ip = socket.gethostbyname(hostname)
     topic_name = "node_" + ip.split(".")[3]
     return topic_name
 
+
 def main():
     topic_name = getTopicName()
-    producer = KafkaProducer("123.58.165.135:9092,123.58.165.138:9092", topic_name)
+    producer = KafkaProducer("123.58.165.135:9092,123.58.165.138:9092",
+                             topic_name)
     producer.setDaemon(True)
     producer.run()
+
 
 if __name__ == '__main__':
     main()
