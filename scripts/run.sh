@@ -22,13 +22,10 @@ module_start() {
     storage)
         python ../code/data/kafkaConsumer.py
         ;;
-    router)
-        python ../code/router.py
-        ;;
     *)
         echo $"Usage: $0 {start|stop|restart|reload|status} MODULE\n"
         echo "MODULES:\n"
-        echo "agent,  storage, router"
+        echo "agent,  storage"
         exit 1 
   esac
 }
