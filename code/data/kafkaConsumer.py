@@ -65,7 +65,11 @@ def main():
     for topic_name in TOPICS:
         consumer = KafkaConsumer("123.58.165.135:9092,123.58.165.138:9092",
                                  topic_name)
-        consumer.run()
+        consumer.setDaemon(True)
+        if topic_name == 'node_138':
+            consumer.run()
+        else:
+            consumer.start()
 
 
 if __name__ == '__main__':
