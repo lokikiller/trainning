@@ -13,11 +13,12 @@ Changelog:
         create at 2015.1.6
 '''
 
+import argparse
 import threading
 import time
 
 from pykafka import KafkaClient
-
+from kazoo.client import KazooClient
 from storage import Storage
 
 
@@ -66,15 +67,37 @@ class KafkaConsumer(threading.Thread):
 
 
 def main():
-    TOPICS = ['node_135', 'node_138']
-    for topic_name in TOPICS:
-        consumer = KafkaConsumer("123.58.165.135:9092,123.58.165.138:9092",
-                                 topic_name)
-        consumer.setDaemon(True)
-        if topic_name == 'node_138':
-            consumer.run()
-        else:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-zk', '--zookeeper', action='store',
+                           dest='zookeeper', help='zookeeper address use in '
+                                                  'distributed environment')
+    args = parser.parse_args()
+    zk_host = args.zookeeper
+
+    zk = KazooClient(hosts=zk_host)
+    zk.start()
+    kafka_host_list = []
+    if zk.exists("/kafka/brokers/"):
+        children = zk.get_children("/kafka/brokers/")
+        for child in children:
+            data, _ = zk.get("/kafka/brokers/" + child)
+            kafka_host_list.append(data.decode("utf-8"))
+    zk.stop()
+
+    kafka_hosts = ','.join(kafka_host_list)
+
+    threads = []
+
+    client = KafkaClient(hosts=kafka_hosts)
+    for topic_name in client.topics.keys():
+        if topic_name.startswith('node_'):
+            consumer = KafkaConsumer(kafka_hosts, topic_name)
+            consumer.setDaemon(True)
             consumer.start()
+            threads.append(consumer)
+
+    for thread in threads :
+        thread.join()
 
 
 if __name__ == '__main__':
