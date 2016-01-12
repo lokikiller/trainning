@@ -18,13 +18,12 @@ Description:
                             use module MODULE
 
     Modules:
-      load, cpu, memory
+      all, load, cpu, memory
 Changelog:
     create at 2015.12.14
 '''
 
 import curses
-
 from cli.cli import CollectorCLI
 
 if __name__ == '__main__':
