@@ -3,7 +3,7 @@
   "swaggerVersion": "1.2",
   "apis": [
     {
-      "path": "/../../api/spec.json",
+      "path": "/../../api/monitor.json",
       "description": "SaDev4 Linux Monitor"
     }
   ]
