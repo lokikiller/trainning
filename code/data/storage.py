@@ -21,11 +21,11 @@ class Storage(object):
     def __init__(self):
         host = os.environ.get('MONGO_HOST')
         if not host:
-            host = '133.133.134.115'
+            host = 'localhost'
 
         port = os.environ.get('MONGO_PORT')
         if not port:
-            port = '32768'
+            port = '27017'
 
         self.client = MongoClient('mongodb://' + host + ':' + port + '/')
 
