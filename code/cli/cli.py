@@ -80,8 +80,7 @@ class CollectorCLI(object):
             self.__scheduler.enterabs(init_time, 1, self.__catch_data,
                                       (module, init_time, ttl, screen,))
             self.__scheduler.run()
-        except Exception, e:
-            print e
+        except Exception:
             curses.endwin()
             parser.parse_args(['-h'])
 
@@ -90,8 +89,8 @@ class CollectorCLI(object):
         i = 0
         for data in datas:
             i += 1
-            str = '{:<15}\t{:<25}'.format(data, datas[data])
-            screen.addstr(i, 0, str, curses.A_NORMAL)
+            format_str = '{:<15}\t{:<25}'.format(data, datas[data])
+            screen.addstr(i, 0, format_str, curses.A_NORMAL)
             screen.refresh()
 
         self.__scheduler.enterabs(action_time + ttl, 1, self.__catch_data,

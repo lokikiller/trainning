@@ -2,3 +2,5 @@ flask
 uwsgi
 pymongo
 flask-restful-swagger
+coverage
+pytest

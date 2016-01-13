@@ -100,3 +100,4 @@ class DataCollection(object):
 
     def catch(self):
         return self.get_data()
+

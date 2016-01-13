@@ -13,11 +13,12 @@ Changelog:
 
 '''
 
-from flask import Flask, render_template, request, json, redirect
+from flask import Flask, render_template, request, redirect
+from flask.ext.restful import Api, Resource, fields
+from flask_restful_swagger import swagger
+
 import config
 from service.transfer import Transfer
-from flask_restful_swagger import swagger
-from flask.ext.restful import Api, Resource, fields
 
 app = Flask(__name__, static_folder='./static')
 
