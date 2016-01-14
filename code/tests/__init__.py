@@ -2,7 +2,7 @@
 # -*- encoding=utf8 -*-
 
 '''
-FileName:   cli_test
+FileName:   __init__
 Author:     Hao Tingyi
 @contact:   lokikiller@126.com
 @version:   $

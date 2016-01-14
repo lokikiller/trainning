@@ -177,6 +177,6 @@ class DataHandler(object):
             res[params_list[i]] = data_list[i]
         return res
 
-    def catch_data(self, module):
+    def catch_data(self):
         return (DataCollection('load').catch(), DataCollection(
             'cpu').catch(), DataCollection('memory').catch())

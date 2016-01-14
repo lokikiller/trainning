@@ -21,7 +21,7 @@ import sys
 sys.path.append("..")
 
 from data.collector import DataCollection
-from data.kafkaProducer import KafkaProducer
+from data.kafka_producer import KafkaProducer
 
 
 class CollectorCLI(object):
