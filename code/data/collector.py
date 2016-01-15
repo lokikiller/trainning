@@ -48,9 +48,12 @@ class DataCollection(object):
             'steal',
             'guest', 'guest_nice')
 
-        for i in range(10):
-            result[key_list[i]] = (float(cpu_array2[i]) - float(
-                cpu_array1[i])) / diff
+        try:
+            for i in range(10):
+                result[key_list[i]] = (float(cpu_array2[i]) - float(
+                    cpu_array1[i])) / diff
+        except RuntimeError:
+            return self.get_cpu()
 
         return result
 
@@ -62,15 +65,10 @@ class DataCollection(object):
         for val in process.communicate()[0].strip().split('\n'):
             list.append(int(val.split(' ')[-2]) * 1024)
 
-        result = collections.OrderedDict()
-        result['total'] = list[0]
+        fields = ['total', 'free', 'buffers', 'cached', 'active', 'inactive']
+        result = collections.OrderedDict(zip(fields, list))
         result['used'] = list[0] - list[1]
         result['abs_used'] = list[0] - (list[1] + list[2] + list[3])
-        result['free'] = list[1]
-        result['buffers'] = list[2]
-        result['cached'] = list[3]
-        result['active'] = list[4]
-        result['inactive'] = list[5]
         result['swap_used'] = list[6] - list[7]
 
         return result
@@ -100,3 +98,4 @@ class DataCollection(object):
 
     def catch(self):
         return self.get_data()
+
