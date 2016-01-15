@@ -27,7 +27,3 @@ class TestCli(object):
         code = subprocess.call(['python', 'agent.py', '-v'])
         assert code == 0
 
-    # def test_run_module(self):
-    #     code = subprocess.call(['python', 'agent.py', '-m', 'cpu', '-s',
-    #                             'true'])
-    #     assert code == 0

@@ -19,16 +19,14 @@ from pymongo import MongoClient
 
 class Storage(object):
     def __init__(self):
-        host = os.environ.get('MONGO_HOST')
-        if not host:
-            host = 'localhost'
+        self.host = os.environ.get('MONGO_HOST')
+        if not self.host:
+            self.host = 'localhost'
 
-        port = os.environ.get('MONGO_PORT')
-        if not port:
-            port = '27017'
-
-        self.client = MongoClient('mongodb://' + host + ':' + port + '/')
+        self.port = os.environ.get('MONGO_PORT')
+        if not self.port:
+            self.port = '27017'
 
     def conn(self):
-        return self.client['performance']
-
+        return MongoClient('mongodb://' + self.host + ':' + self.port + '/')[
+            'performance']
