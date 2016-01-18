@@ -15,6 +15,7 @@ swagger可以很好的满足本阶段的诉求。
 ####任务内容及分工
 
 本阶段与stage3阶段中Web开发联系紧密，需要对原有的router.py及前端展示内容进行修改，分工如下：
+
 * swagger调研及原有代码restful化 hty负责
 * kafka的producer及consumer优化调整 zby负责
 * 启动脚本修改  zby负责
