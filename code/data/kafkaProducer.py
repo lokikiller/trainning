@@ -23,6 +23,11 @@ from pykafka import KafkaClient
 from collector import DataCollection
 from kazoo.client import KazooClient
 
+import logging
+import logging.config
+
+logging.config.fileConfig('../../conf/log.conf')
+root_logger = logging.getLogger('root')
 
 class KafkaProducer(threading.Thread):
     def __init__(self, zk_host):
@@ -47,6 +52,9 @@ class KafkaProducer(threading.Thread):
         self.TOPIC_NAME = "node_" + ip.split(".")[3]
         self.client = KafkaClient(hosts=self.KAFKA_HOSTS)
         self.topic = self.client.topics[self.TOPIC_NAME]
+
+        root_logger.info('kafka-host-producer:' + self.KAFKA_HOSTS)
+        root_logger.info('kafka-topic-producer:' + self.TOPIC_NAME)
 
         # init list size
         self.ONE_MIN_LIST_SIZE = 2
