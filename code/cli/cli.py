@@ -21,8 +21,7 @@ import sys
 sys.path.append("..")
 
 from data.collector import DataCollection
-from data.kafka_producer import KafkaProducer
-
+from data.filter import Filter
 
 class CollectorCLI(object):
     def __init__(self):
@@ -67,7 +66,7 @@ class CollectorCLI(object):
             self.show_data_terminal(ttl, module, parser)
         else:
             zk_host = args.zookeeper
-            producer = KafkaProducer(zk_host)
+            producer = Filter(zk_host)
             producer.setDaemon(True)
             producer.run()
 
