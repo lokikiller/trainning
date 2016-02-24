@@ -21,6 +21,12 @@ from pykafka import KafkaClient
 from kazoo.client import KazooClient
 from storage import Storage
 
+import logging
+import logging.config
+
+logging.config.fileConfig('../../conf/log.conf')
+root_logger = logging.getLogger('root')
+
 
 class KafkaConsumer(threading.Thread):
     def __init__(self, kafka_hosts, topic_name):
@@ -85,12 +91,14 @@ def main():
     zk.stop()
 
     kafka_hosts = ','.join(kafka_host_list)
+    root_logger.info('kafka-host-consumer:' + kafka_hosts)
 
     threads = []
 
     client = KafkaClient(hosts=kafka_hosts)
     for topic_name in client.topics.keys():
         if topic_name.startswith('node_'):
+            root_logger.info('kafka-topic-consumer:' + topic_name)
             consumer = KafkaConsumer(kafka_hosts, topic_name)
             consumer.setDaemon(True)
             consumer.start()
