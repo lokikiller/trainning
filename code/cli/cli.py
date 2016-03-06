@@ -50,6 +50,10 @@ class CollectorCLI(object):
         group.add_argument('-zk', '--zookeeper', action='store',
                            dest='zookeeper', help='zookeeper address use in '
                                                   'distributed environment')
+        group.add_argument('-ip', '--address', action='store', dest='ip',
+                           help='data queue address')
+        group.add_argument('-port', '--port', action='store', dest='port',
+                           help='data queue port')
 
         groupmodules = parser.add_argument_group('Modules')
         groupmodules.add_argument('all, load, cpu, memory',
@@ -66,7 +70,9 @@ class CollectorCLI(object):
             self.show_data_terminal(ttl, module, parser)
         else:
             zk_host = args.zookeeper
-            producer = Filter(zk_host)
+            ip = args.ip
+            port = args.port
+            producer = Filter(zk_host, ip, port)
             producer.setDaemon(True)
             producer.run()
 
