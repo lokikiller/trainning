@@ -2,41 +2,39 @@
 # -*- encoding=utf8 -*-
 
 '''
-FileName:   kafkaProducer
-Author:     Hao Tingyi / Zhou Boyu
-@contact:   lokikiller@126.com / zby22013@163.com
+FileName:   filter
+Author:     Hao Tingyi
+@contact:   lokikiller@126.com
 @version:   $
 
 Description:
-    filt data from data-set, using queue to filt the max data in each set,
-every 30 seconds and push data to kafka.
 
 Changelog:
-    create at 2015.12.15 by Haotingyi
-    modify at 2015.1.6 by Zhou boyu
-'''
 
-import socket
-import threading
-import time
-from collector import DataCollection
-from kafka_producer import KafkaProducer
+'''
 
 import logging
 import logging.config
+import socket
+import threading
+import time
+import xmlrpclib
+from collector import DataCollection
 
 logging.config.fileConfig('../../conf/log.conf')
 root_logger = logging.getLogger('root')
 
-class Filter(threading.Thread):
-    def __init__(self, zk_host):
-        threading.Thread.__init__(self)
 
+class Filter(threading.Thread):
+    def __init__(self, zk_host, ip, port):
+        threading.Thread.__init__(self)
 
         hostname = socket.getfqdn(socket.gethostname())
         ip = socket.gethostbyname(hostname)
         self.TOPIC_NAME = "node_" + ip.split(".")[3]
         self.zk_host = zk_host
+        self.ip = ip
+        self.port = port
 
         # init list size
         self.ONE_MIN_LIST_SIZE = 2
@@ -54,7 +52,7 @@ class Filter(threading.Thread):
         # init data handler
         self.handler = DataHandler()
 
-        # init data length for a host  
+        # init data length for a host
         self.one_min = 30
         self.five_min = 36
         self.thirty_min = 48
@@ -73,12 +71,14 @@ class Filter(threading.Thread):
         res = []
         for index, items in enumerate(lists):
             res.append(self.handler.get_data(items, params_list[index]))
-        self.__kafka_producer(res, collection)
+        self.__push_queue(res, collection)
 
-    # kafka producer
-    def __kafka_producer(self, lists, collection):
-        producer = KafkaProducer(self.zk_host, self.TOPIC_NAME)
-        producer.kafka_producer(lists, collection)
+    # data_queue
+    def __push_queue(self, lists, collection):
+        proxy = xmlrpclib.ServerProxy("http://" + self.ip + ":" + self.port +
+                                      "/")
+        multicall = xmlrpclib.MultiCall(proxy)
+        multicall.push(lists, collection, self.TOPIC_NAME)
 
     # init data manage queue
     def __new_list(self):

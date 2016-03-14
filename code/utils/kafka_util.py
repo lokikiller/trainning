@@ -2,7 +2,7 @@
 # -*- encoding=utf8 -*-
 
 '''
-FileName:   kafka_producer
+FileName:   kafka_util
 Author:     Hao Tingyi
 @contact:   lokikiller@126.com
 @version:   $
@@ -12,16 +12,13 @@ Description:
 Changelog:
 
 '''
+
 from pykafka import KafkaClient
 from kazoo.client import KazooClient
-import logging
-import logging.config
 
-logging.config.fileConfig('../../conf/log.conf')
-root_logger = logging.getLogger('root')
 
-class KafkaProducer(object):
-    def __init__(self, zk_host, topic):
+class KafkaUtil(object):
+    def __init__(self, zk_host):
         # init zk
         self.zkHost = zk_host
         zk = KazooClient(hosts=self.zkHost)
@@ -37,14 +34,21 @@ class KafkaProducer(object):
         # init kafka
         self.KAFKA_HOSTS = ','.join(kafka_host_list)
         self.client = KafkaClient(hosts=self.KAFKA_HOSTS)
-        self.topic = self.client.topics[topic]
 
-        root_logger.info('kafka-host-producer:' + self.KAFKA_HOSTS)
-        root_logger.info('kafka-topic-producer:' + topic)
-
-    def kafka_producer(self, lists, collection):
-        with self.topic.get_sync_producer() as producer:
+    def kafka_producer(self, lists, collection, topic):
+        with self.self.client.topics[topic].get_sync_producer() as producer:
             res = [lists, collection]
             message = repr(res)
             producer.produce(message)
 
+    def kafka_consumer(self, topic):
+        consumer = self.self.client.topics[topic].get_simple_consumer()
+        for message in consumer:
+            if message is not None:
+                lists = eval(message.value)
+                data_lists = lists[0]
+                collection = lists[1]
+                return {'lists': data_lists, 'collection': collection}
+
+    def get_topics(self):
+        return self.client.topics.keys()
