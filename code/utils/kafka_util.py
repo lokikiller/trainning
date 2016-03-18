@@ -3,8 +3,8 @@
 
 '''
 FileName:   kafka_util
-Author:     Hao Tingyi
-@contact:   lokikiller@126.com
+Author:     Hao Tingyi / Zhou Boyu
+@contact:   lokikiller@126.com / zby22013@163.com
 @version:   $
 
 Description:
@@ -36,13 +36,13 @@ class KafkaUtil(object):
         self.client = KafkaClient(hosts=self.KAFKA_HOSTS)
 
     def kafka_producer(self, lists, collection, topic):
-        with self.self.client.topics[topic].get_sync_producer() as producer:
+        with self.client.topics[topic].get_sync_producer() as producer:
             res = [lists, collection]
             message = repr(res)
             producer.produce(message)
 
     def kafka_consumer(self, topic):
-        consumer = self.self.client.topics[topic].get_simple_consumer()
+        consumer = self.client.topics[topic].get_simple_consumer()
         for message in consumer:
             if message is not None:
                 lists = eval(message.value)

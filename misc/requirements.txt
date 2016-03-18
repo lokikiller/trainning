@@ -3,5 +3,13 @@ uwsgi
 pymongo
 flask-restful-swagger
 coverage
-pytest
 mock
+gevent==1.0.2
+flask-restful
+flask-httpauth
+flask-sqlalchemy
+flask-openid
+python-dateutil
+colorama
+pyprimes
+requests

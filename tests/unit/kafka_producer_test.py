@@ -3,8 +3,8 @@
 
 '''
 FileName:   kafka_producer_test
-Author:     Hao Tingyi
-@contact:   lokikiller@126.com
+Author:     Hao Tingyi / Zhou Boyu
+@contact:   lokikiller@126.com / zby22013@163.com
 @version:   $
 
 Description:
@@ -21,7 +21,7 @@ import pytest
 
 sys.path.append("..")
 
-from data.kafka_producer import DataHandler, KafkaProducer
+from data.filter import DataHandler,Filter
 from kazoo.client import KazooClient
 from pykafka.cluster import Cluster, TopicDict
 
@@ -81,6 +81,6 @@ class TestKafkaProducer(object):
         mock_sleep.side_effect = Exception('Boom')
 
         with pytest.raises(Exception) as excinfo:
-            KafkaProducer('localhost').run()
+            Filter('localhost','0.0.0.0','80').run()
 
         assert excinfo.value.message == 'Boom'

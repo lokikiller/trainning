@@ -23,7 +23,7 @@ from service.transfer import Transfer
 import logging
 import logging.config
 
-logging.config.fileConfig('../conf/log.conf')
+logging.config.fileConfig('conf/log.conf')
 router_logger = logging.getLogger('router')
 
 app = Flask(__name__, static_folder='./static')

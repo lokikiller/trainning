@@ -3,8 +3,8 @@
 
 '''
 FileName:   kafka_consumer_test
-Author:     Hao Tingyi
-@contact:   lokikiller@126.com
+Author:     Hao Tingyi / Zhou Boyu
+@contact:   lokikiller@126.com / zby22013@163.com
 @version:   $
 
 Description:
@@ -18,13 +18,14 @@ import mock
 
 sys.path.append("..")
 
-from data.storage import Storage
-from data.kafka_consumer import KafkaConsumer
+from utils.mongo_util import DB
+from storage.storage import Storage
+from utils.kafka_util import KafkaUtil
 from pykafka.cluster import Cluster, TopicDict
 
 
 class TestKafkaConsumer(object):
-    @mock.patch.object(Storage, 'conn')
+    @mock.patch.object(DB, 'conn')
     @mock.patch('pykafka.client.KafkaClient')
     @mock.patch.object(Cluster, 'update')
     @mock.patch.object(TopicDict, '_create_topic')
@@ -41,4 +42,6 @@ class TestKafkaConsumer(object):
 
         mock_storage.return_value = None
 
-        KafkaConsumer('localhost', 'node_0').run()
+        kafka_client = KafkaUtil('localhost')
+
+        Storage(kafka_client, 'node_0').run()

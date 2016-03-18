@@ -21,7 +21,7 @@ import time
 import xmlrpclib
 from collector import DataCollection
 
-logging.config.fileConfig('../../conf/log.conf')
+logging.config.fileConfig('conf/log.conf')
 root_logger = logging.getLogger('root')
 
 

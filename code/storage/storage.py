@@ -35,21 +35,23 @@ class Storage(threading.Thread):
         self.db = db.conn()
 
     def __storage_data(self):
-        lists, collection = self.kafka_client.kafka_consumer(self.topic)
-        dbnames = ['load', 'cpu', 'memory']
-        limit = getattr(self, collection)
-        for index, items in enumerate(lists):
-            storages = {"time": time.time(), "name": self.topic,
-                        "data": items}
-            tb = self.db[collection + '_' + dbnames[index]]
-            tb.insert_one(storages)
-            if tb.find({'name': self.topic}).count() > limit:
-                data = tb.find({'name': self.topic}).sort('time').limit(
-                    1).next()
-                tb.find_one_and_delete({'_id': data['_id']})
+        con = self.kafka_client.kafka_consumer(self.topic)
+        if con is not None:
+            lists, collection = con
+            dbnames = ['load', 'cpu', 'memory']
+            limit = getattr(self, collection)
+            for index, items in enumerate(lists):
+                storages = {"time": time.time(), "name": self.topic,
+                            "data": items}
+                tb = self.db[collection + '_' + dbnames[index]]
+                tb.insert_one(storages)
+                if tb.find({'name': self.topic}).count() > limit:
+                    data = tb.find({'name': self.topic}).sort('time').limit(
+                        1).next()
+                    tb.find_one_and_delete({'_id': data['_id']})
 
     def run(self):
-        self.__consume()
+        self.__storage_data()
 
 
 def main():
