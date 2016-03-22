@@ -21,7 +21,7 @@ import sys
 sys.path.append("..")
 
 from data.collector import DataCollection
-from data.filter import Filter
+from data.rpc_sender import RPCSender
 
 class CollectorCLI(object):
     def __init__(self):
@@ -72,7 +72,7 @@ class CollectorCLI(object):
             zk_host = args.zookeeper
             ip = args.ip
             port = args.port
-            producer = Filter(zk_host, ip, port)
+            producer = RPCSender(zk_host, ip, port)
             producer.setDaemon(True)
             producer.run()
 
