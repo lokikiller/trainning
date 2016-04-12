@@ -26,7 +26,7 @@ class DataQueue(object):
     def __init__(self, ip, port, zk_host):
         self.server = AsyncXMLRPCServer((ip, port), SimpleXMLRPCRequestHandler)
         self.zk_host = zk_host
-        self.kafka_client = KafkaUtil(self.zk_host, self.topic)
+        self.kafka_client = KafkaUtil(self.zk_host)
         self.server.register_multicall_functions()
         self.server.register_function(self.push, 'push')
         self.server.serve_forever()
