@@ -12,6 +12,9 @@ Description:
 Changelog:
 
 '''
+import sys
+
+sys.path.append('..')
 from utils.mongo_util import DB
 
 
@@ -25,6 +28,18 @@ class Transfer(object):
             del item['_id']
             res.append(item)
         return res
+
+    def collection_exist(self, collection):
+        if collection in self.db.collection_names():
+            return True
+        else:
+            return False
+
+    def uuid_count(self, uuid, collection):
+        if self.db[collection].find({'name': uuid}).count() != 0:
+            return True
+        else:
+            return False
 
     def get_hosts(self):
         res = []

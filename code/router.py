@@ -16,15 +16,8 @@ Changelog:
 from flask import Flask, render_template, request, redirect
 from flask.ext.restful import Api, Resource, fields
 from flask_restful_swagger import swagger
-
 import config
 from service.transfer import Transfer
-
-import logging
-import logging.config
-
-logging.config.fileConfig('conf/log.conf')
-router_logger = logging.getLogger('router')
 
 app = Flask(__name__, static_folder='./static')
 
@@ -38,20 +31,17 @@ api = swagger.docs(Api(app), apiVersion='0.1',
 @app.route('/')
 @app.route('/index.html')
 def index():
-    router_logger.info('visit index.html')
     return render_template('index.html')
 
 
 @app.route('/host/detail', methods=['POST'])
 def host_detail():
     uuid = request.form['hostUuid']
-    router_logger.info('visit /host/detail with uuid ' + uuid)
     return render_template('detail.html', uuid=uuid)
 
 
 @app.route('/docs')
 def docs():
-    router_logger.info('visit /docs')
     return redirect('/static/docs.html')
 
 
@@ -87,8 +77,14 @@ class Host(Resource):
         Get host list, which installed our monitor agent, will show cpu load
         and memory data in the list.
         """
-        router_logger.info('visit /host/list')
-        return Transfer().get_hosts(), 200, {
+        res = []
+        try:
+            res = Transfer().get_hosts()
+        except Exception:
+            return res, 500, {
+                'Access-Control-Allow-Origin': '*'
+            }
+        return res, 200, {
             'Access-Control-Allow-Origin': '*'}
 
 
@@ -152,9 +148,26 @@ class Performance(Resource):
         """
         collection = request.args.get('collection')
         uuid = request.args.get('uuid')
-        router_logger.info('visit /performance with collection ' +
-                           collection + ' uuid ' + uuid)
-        return Transfer().get_data(uuid, collection), 200, {
+        res = []
+        if uuid.count('_') != 1 or collection.count('_') != 2:
+            return res, 400, {
+                'Access-Control-Allow-Origin': '*'
+            }
+        if not Transfer().collection_exist(collection):
+            return res, 404, {
+                'Access-Control-Allow-Origin': '*'
+            }
+        if not Transfer().uuid_count(uuid, collection):
+            return res, 404, {
+                'Access-Control-Allow-Origin': '*'
+            }
+        try:
+            res = Transfer().get_data(uuid, collection)
+        except Exception:
+            return res, 500, {
+                'Access-Control-Allow-Origin': '*'
+            }
+        return res, 200, {
             'Access-Control-Allow-Origin': '*'}
 
 
