@@ -145,6 +145,10 @@ class Performance(Resource):
         Get performance data from database. Required uuid which is host-name/IP
         and collection which is the collection name in database. When the
         collection is not found in database, will return status 404.
+
+        example:
+        uuid : node_115
+        collection: one_min_cpu
         """
         collection = request.args.get('collection')
         uuid = request.args.get('uuid')
