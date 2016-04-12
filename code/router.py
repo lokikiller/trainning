@@ -149,7 +149,7 @@ class Performance(Resource):
         collection = request.args.get('collection')
         uuid = request.args.get('uuid')
         res = []
-        if uuid.count('_') != 1 or collection.count('_') != 2:
+        if not uuid.startswith('node_') or collection.count('_') != 2:
             return res, 400, {
                 'Access-Control-Allow-Origin': '*'
             }
