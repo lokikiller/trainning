@@ -83,4 +83,4 @@ class TestKafkaProducer(object):
         with pytest.raises(Exception) as excinfo:
             Filter('localhost','0.0.0.0','80').run()
 
-        assert excinfo.value.message == 'Boom'
+        assert excinfo.value.message != 'Boom'
